@@ -15,4 +15,6 @@ class main_window(Tkinter.Tk):
         self.main_frame.pack(expand=Tkinter.YES,
                              fill=Tkinter.BOTH, side=Tkinter.LEFT)
 
+        self.host_text = None
+
         GUI.vc_connect.render_login(self)

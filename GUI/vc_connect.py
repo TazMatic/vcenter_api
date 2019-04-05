@@ -1,8 +1,10 @@
 """"Provides the main_window"""
 import Tkinter as tk
+import socket
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 import atexit
 from pyVmomi import vim
+from functools import partial
 
 
 def printvminfo(vm, depth=1):
@@ -35,6 +37,8 @@ def vc_connect(window):
     except vim.fault.InvalidLogin:
         raise SystemExit("Unable to connect to host "
                          "with supplied credentials.")
+    except socket.error:
+        raise SystemExit("Unable to connect to host.")
 
     content = si.RetrieveContent()
     for child in content.rootFolder.childEntity:
@@ -69,7 +73,8 @@ def render_login(window):
              foreground="#ffffff").place(x=60, y=50)
 
     window.host_text = tk.Entry(window.main_frame, font=("Helvetica", 14),
-                                width=30).place(x=200, y=50)
+                                width=30)
+    window.host_text.place(x=200, y=50)
 
     # create label and entry for username
     tk.Label(window.main_frame,
@@ -77,7 +82,8 @@ def render_login(window):
              foreground="#ffffff", font=("Helvetica", 14)).place(x=60, y=100)
 
     window.username_text = tk.Entry(window.main_frame, font=("Helvetica", 14),
-                                    width=30).place(x=200, y=100)
+                                    width=30)
+    window.username_text.place(x=200, y=100)
 
     # create label and entry for username
     tk.Label(window.main_frame,
@@ -85,11 +91,12 @@ def render_login(window):
              foreground="#ffffff", font=("Helvetica", 14)).place(x=60, y=150)
 
     window.password_text = tk.Entry(window.main_frame, font=("Helvetica", 14),
-                                    width=30).place(x=200, y=150)
+                                    width=30)
+    window.password_text.place(x=200, y=150)
 
     # create login and cancel button
     tk.Button(window.main_frame, text="Login", width=15,
-              command=lambda: vc_connect(window),
+              command=partial(vc_connect, window),
               font=("Helvetica", 14)).place(x=150, y=200)
     tk.Button(window.main_frame, text="Cancel", width=15,
               command=window.destroy,
