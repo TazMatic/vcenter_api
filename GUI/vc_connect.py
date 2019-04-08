@@ -1,5 +1,6 @@
 """"Provides the main_window"""
 import Tkinter as tk
+import tkMessageBox
 import socket
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 import atexit
@@ -26,6 +27,63 @@ def printvminfo(vm, depth=1):
     summary = vm.summary
     print(summary.config.name)
 
+# https://stackoverflow.com/a/4552646
+
+
+lastRendered = None
+
+
+def rClicker(e):
+    ''' right click context menu for all Tk Entry and Text widgets
+    '''
+
+    try:
+        def rClick_Copy(e, apnd=0):
+            e.widget.event_generate('<Control-c>')
+
+        def rClick_Cut(e):
+            e.widget.event_generate('<Control-x>')
+
+        def rClick_Paste(e):
+            e.widget.event_generate('<Control-v>')
+
+        e.widget.focus()
+
+        nclst = [
+               (' Cut', lambda e=e: rClick_Cut(e)),
+               (' Copy', lambda e=e: rClick_Copy(e)),
+               (' Paste', lambda e=e: rClick_Paste(e)),
+               ]
+
+        global lastRendered
+        if lastRendered:
+            lastRendered.unpost()
+
+        rmenu = tk.Menu(None, tearoff=0, takefocus=0)
+        lastRendered = rmenu
+
+        for (txt, cmd) in nclst:
+            rmenu.add_command(label=txt, command=cmd)
+
+        rmenu.post(e.x_root+40, e.y_root+10)
+
+    except tk.TclError:
+        print(' - rClick menu, something wrong')
+        pass
+
+    return "break"
+
+
+def rClickbinder(r):
+
+    try:
+        for b in ['Text', 'Entry', 'Listbox', 'Label']:
+            r.bind_class(b, sequence='<Button-3> ',
+                         func=rClicker, add='')
+    except tk.TclError:
+        print(' - rClickbinder, something wrong')
+        pass
+
 
 def vc_connect(window):
     si = None
@@ -35,10 +93,17 @@ def vc_connect(window):
                                pwd=window.password_text.get())
         atexit.register(Disconnect, si)
     except vim.fault.InvalidLogin:
-        raise SystemExit("Unable to connect to host "
-                         "with supplied credentials.")
+        tkMessageBox.showinfo("title", "Unable to connect to host"
+                                       "with supplied credentials.")
+        return
+        # raise SystemExit("Unable to connect to host "
+        #                 "with supplied credentials.")
     except socket.error:
-        raise SystemExit("Unable to connect to host.")
+        tkMessageBox.showinfo("title", "Unable to connect to host")
+        return
+        # raise SystemExit("Unable to connect to host.")
+
+    # render clone_vm window
 
     content = si.RetrieveContent()
     for child in content.rootFolder.childEntity:
@@ -66,6 +131,7 @@ def render_login(window):
     window.minsize(600, 400)
     window.maxsize(600, 400)
     window.main_frame.config(bg='#3a3d42')
+    rClickbinder(window)
 
     # create label and entry for host name/ip
     tk.Label(window.main_frame, text="VCenter IP",
