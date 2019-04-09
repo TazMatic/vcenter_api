@@ -4,6 +4,7 @@ import tkMessageBox
 import socket
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 import atexit
+import vc_main_gui
 from pyVmomi import vim
 from functools import partial
 
@@ -86,12 +87,12 @@ def rClickbinder(r):
 
 
 def vc_connect(window):
-    si = None
+    window.si = None
     try:
-        si = SmartConnectNoSSL(host=window.host_text.get(),
-                               user=window.username_text.get(),
-                               pwd=window.password_text.get())
-        atexit.register(Disconnect, si)
+        window.si = SmartConnectNoSSL(host=window.host_text.get(),
+                                      user=window.username_text.get(),
+                                      pwd=window.password_text.get())
+        atexit.register(Disconnect, window.si)
     except vim.fault.InvalidLogin:
         tkMessageBox.showinfo("title", "Unable to connect to host"
                                        "with supplied credentials.")
@@ -102,17 +103,21 @@ def vc_connect(window):
         tkMessageBox.showinfo("title", "Unable to connect to host")
         return
         # raise SystemExit("Unable to connect to host.")
+    except Exception as e:
+        tkMessageBox.showinfo("title", e)
+        return
 
     # render clone_vm window
+    vc_main_gui.render_main_gui(window)
 
-    content = si.RetrieveContent()
-    for child in content.rootFolder.childEntity:
-        if hasattr(child, 'vmFolder'):
-            datacenter = child
-            vmfolder = datacenter.vmFolder
-            vmlist = vmfolder.childEntity
-            for vm in vmlist:
-                printvminfo(vm)
+    # content = window.si.RetrieveContent()
+    # for child in content.rootFolder.childEntity:
+    #     if hasattr(child, 'vmFolder'):
+    #         datacenter = child
+    #         vmfolder = datacenter.vmFolder
+    #         vmlist = vmfolder.childEntity
+    #         for vm in vmlist:
+    #             printvminfo(vm)
 
 
 def render_login(window):

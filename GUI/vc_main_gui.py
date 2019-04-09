@@ -1,5 +1,5 @@
 """"Provides the central GUI"""
-# import Tkinter as tk
+import Tkinter as tk
 
 
 def render_main_gui(window):
@@ -16,4 +16,14 @@ def render_main_gui(window):
     # resize window for login prompt
     window.geometry(screen_resolution)
     window.minsize(800, 600)
+    window.maxsize(99999, 99999)
     window.main_frame.config(bg='#3a3d42')
+
+# add two frames, one for the verticle menu and one for the selected options
+    window.menu_frame = tk.Frame(window.main_frame, width=200, bg="#ffffff")
+    window.central_frame = tk.Frame(window.main_frame, width=600,
+                                    bg="#000000")
+    window.menu_frame.pack(expand=tk.NO,
+                           fill=tk.BOTH, side=tk.LEFT)
+    window.central_frame.pack(expand=tk.YES,
+                              fill=tk.BOTH, side=tk.LEFT)
