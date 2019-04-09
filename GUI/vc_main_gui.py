@@ -1,13 +1,14 @@
 """"Provides the central GUI"""
-import Tkinter as tk
+import tkinter as tk
 
 
 # https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
 class ScrollFrame(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self)
+        super().__init__(parent)
 
-        self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff")
+        self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff",
+                                width=200)
         self.viewPort = tk.Frame(self.canvas, background="#ffffff")
         self.vsb = tk.Scrollbar(self, orient="vertical",
                                 command=self.canvas.yview)
@@ -25,23 +26,27 @@ class ScrollFrame(tk.Frame):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
 
+# ********************************
+# Example usage of the above class
+# ********************************
+
 class Example(tk.Frame):
     def __init__(self, root):
 
         tk.Frame.__init__(self, root)
-        self.scrollFrame = ScrollFrame(self) # add a new scrollable frame.
-
-        # Now add some controls to the scrollframe.
-        # NOTE: the child controls are added to the view port (scrollFrame.viewPort, NOT scrollframe itself)
+        self.scrollFrame = ScrollFrame(self)
         for row in range(100):
             a = row
-            tk.Label(self.scrollFrame.viewPort, text="%s" % row, width=3, borderwidth="1",
+            tk.Label(self.scrollFrame.viewPort, text="%s" % row,
+                     width=3, borderwidth="1",
                      relief="solid").grid(row=row, column=0)
-            t ="this is the second column for row %s" % row
-            tk.Button(self.scrollFrame.viewPort, text=t, command=lambda x=a: self.printMsg("Hello " + str(x))).grid(row=row, column=1)
+            t = "this is the second column for row %s" % row
+            tk.Button(self.scrollFrame.viewPort, text=t,
+                      command=lambda x=a:
+                      self.printMsg("Hello " +
+                                    str(x))).grid(row=row, column=1)
 
-        # when packing the scrollframe, we pack scrollFrame itself (NOT the viewPort)
-        self.scrollFrame.pack(side="top", fill="both", expand=True)
+        self.scrollFrame.pack(side="top", fill="both", expand=tk.YES)
 
     def printMsg(self, msg):
         print(msg)
@@ -75,7 +80,7 @@ def render_main_gui(window):
                               fill=tk.BOTH, side=tk.LEFT)
 
     # Problem stuff
-    # window.menu_frame = Example(window.menu_parent_frame)
-    # window.menu_frame.pack()
+    window.menu_frame = Example(window.menu_parent_frame)
+    window.menu_frame.pack(expand=tk.NO, fill=tk.BOTH, side=tk.LEFT)
 
 # add menu buttons

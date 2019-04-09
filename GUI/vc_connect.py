@@ -1,10 +1,9 @@
 """"Provides the main_window"""
-import Tkinter as tk
-import tkMessageBox
+import tkinter as tk
 import socket
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 import atexit
-import vc_main_gui
+import GUI.vc_main_gui as vc_main_gui
 from pyVmomi import vim
 from functools import partial
 
@@ -94,17 +93,17 @@ def vc_connect(window):
                                       pwd=window.password_text.get())
         atexit.register(Disconnect, window.si)
     except vim.fault.InvalidLogin:
-        tkMessageBox.showinfo("title", "Unable to connect to host"
-                                       "with supplied credentials.")
+        tk.MessageBox.showinfo("title", "Unable to connect to host"
+                                        "with supplied credentials.")
         return
         # raise SystemExit("Unable to connect to host "
         #                 "with supplied credentials.")
     except socket.error:
-        tkMessageBox.showinfo("title", "Unable to connect to host")
+        tk.MessageBox.showinfo("title", "Unable to connect to host")
         return
         # raise SystemExit("Unable to connect to host.")
     except Exception as e:
-        tkMessageBox.showinfo("title", e)
+        tk.MessageBox.showinfo("title", e)
         return
 
     # render clone_vm window
