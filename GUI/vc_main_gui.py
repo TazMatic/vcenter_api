@@ -4,11 +4,10 @@ import tkinter as tk
 
 # https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
 class ScrollFrame(tk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, size):
         super().__init__(parent)
-
         self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff",
-                                width=200)
+                                width=size)
         self.viewPort = tk.Frame(self.canvas, background="#ffffff")
         self.vsb = tk.Scrollbar(self, orient="vertical",
                                 command=self.canvas.yview)
@@ -30,11 +29,11 @@ class ScrollFrame(tk.Frame):
 # Example usage of the above class
 # ********************************
 
-class Example(tk.Frame):
+class scrollable_frame(tk.Frame):
     def __init__(self, root):
 
         tk.Frame.__init__(self, root)
-        self.scrollFrame = ScrollFrame(self)
+        self.scrollFrame = ScrollFrame(self, root.winfo_width())
         for row in range(100):
             a = row
             tk.Label(self.scrollFrame.viewPort, text="%s" % row,
@@ -80,7 +79,8 @@ def render_main_gui(window):
                               fill=tk.BOTH, side=tk.LEFT)
 
     # Problem stuff
-    window.menu_frame = Example(window.menu_parent_frame)
+    window.update_idletasks()
+    window.menu_frame = scrollable_frame(window.menu_parent_frame)
     window.menu_frame.pack(expand=tk.NO, fill=tk.BOTH, side=tk.LEFT)
 
 # add menu buttons
