@@ -2,6 +2,51 @@
 import Tkinter as tk
 
 
+# https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
+class ScrollFrame(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self)
+
+        self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff")
+        self.viewPort = tk.Frame(self.canvas, background="#ffffff")
+        self.vsb = tk.Scrollbar(self, orient="vertical",
+                                command=self.canvas.yview)
+        self.canvas.configure(yscrollcommand=self.vsb.set)
+
+        self.vsb.pack(side="right", fill="y")
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.canvas.create_window((4, 4), window=self.viewPort, anchor="nw",
+                                  tags="self.viewPort")
+
+        self.viewPort.bind("<Configure>", self.onFrameConfigure)
+
+    def onFrameConfigure(self, event):
+        '''Reset the scroll region to encompass the inner frame'''
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+
+class Example(tk.Frame):
+    def __init__(self, root):
+
+        tk.Frame.__init__(self, root)
+        self.scrollFrame = ScrollFrame(self) # add a new scrollable frame.
+
+        # Now add some controls to the scrollframe.
+        # NOTE: the child controls are added to the view port (scrollFrame.viewPort, NOT scrollframe itself)
+        for row in range(100):
+            a = row
+            tk.Label(self.scrollFrame.viewPort, text="%s" % row, width=3, borderwidth="1",
+                     relief="solid").grid(row=row, column=0)
+            t ="this is the second column for row %s" % row
+            tk.Button(self.scrollFrame.viewPort, text=t, command=lambda x=a: self.printMsg("Hello " + str(x))).grid(row=row, column=1)
+
+        # when packing the scrollframe, we pack scrollFrame itself (NOT the viewPort)
+        self.scrollFrame.pack(side="top", fill="both", expand=True)
+
+    def printMsg(self, msg):
+        print(msg)
+
+
 def render_main_gui(window):
     # clear the screen of anything in it before
     for child in window.main_frame.winfo_children():
@@ -20,10 +65,17 @@ def render_main_gui(window):
     window.main_frame.config(bg='#3a3d42')
 
 # add two frames, one for the verticle menu and one for the selected options
-    window.menu_frame = tk.Frame(window.main_frame, width=200, bg="#ffffff")
+    window.menu_parent_frame = tk.Frame(window.main_frame, width=200,
+                                        bg="#175ed1")
     window.central_frame = tk.Frame(window.main_frame, width=600,
                                     bg="#000000")
-    window.menu_frame.pack(expand=tk.NO,
-                           fill=tk.BOTH, side=tk.LEFT)
+    window.menu_parent_frame.pack(expand=tk.NO,
+                                  fill=tk.BOTH, side=tk.LEFT)
     window.central_frame.pack(expand=tk.YES,
                               fill=tk.BOTH, side=tk.LEFT)
+
+    # Problem stuff
+    # window.menu_frame = Example(window.menu_parent_frame)
+    # window.menu_frame.pack()
+
+# add menu buttons
