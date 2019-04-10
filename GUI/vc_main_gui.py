@@ -1,37 +1,6 @@
 """"Provides the central GUI"""
 import tkinter as tk
-
-
-# move to own file
-def printvminfo(vm, depth=1):
-    """
-    Print information for a particular virtual machine or recurse into a folder
-    with depth protection
-    """
-
-    # if this is a group it will have children. if it does, recurse into them
-    # and then return
-    if hasattr(vm, 'childEntity'):
-        if depth > 10:
-            return
-        vmlist = vm.childEntity
-        for child in vmlist:
-            printvminfo(child, depth+1)
-        return
-
-    summary = vm.summary
-    print(summary.config.name)
-
-
-def list_vms(window):
-    content = window.si.RetrieveContent()
-    for child in content.rootFolder.childEntity:
-        if hasattr(child, 'vmFolder'):
-            datacenter = child
-            vmfolder = datacenter.vmFolder
-            vmlist = vmfolder.childEntity
-            for vm in vmlist:
-                printvminfo(vm)
+from core_functions.list_vms import list_vms
 
 
 # https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
@@ -56,10 +25,6 @@ class ScrollFrame(tk.Frame):
         '''Reset the scroll region to encompass the inner frame'''
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
-
-# ********************************
-# Example usage of the above class
-# ********************************
 
 class scrollable_frame(tk.Frame):
     def __init__(self, root, window):

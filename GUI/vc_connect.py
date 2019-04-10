@@ -1,32 +1,12 @@
 """"Provides the main_window"""
 import tkinter as tk
+from tkinter import messagebox
 import socket
 from pyVim.connect import SmartConnectNoSSL, Disconnect
 import atexit
 import GUI.vc_main_gui as vc_main_gui
 from pyVmomi import vim
 from functools import partial
-
-
-def printvminfo(vm, depth=1):
-    """
-    Print information for a particular virtual machine or recurse into a folder
-    with depth protection
-    """
-
-    # if this is a group it will have children. if it does, recurse into them
-    # and then return
-    if hasattr(vm, 'childEntity'):
-        if depth > 10:
-            return
-        vmlist = vm.childEntity
-        for child in vmlist:
-            printvminfo(child, depth+1)
-        return
-
-    summary = vm.summary
-    print(summary.config.name)
-
 # https://stackoverflow.com/a/4552646
 
 
@@ -93,30 +73,21 @@ def vc_connect(window):
                                       pwd=window.password_text.get())
         atexit.register(Disconnect, window.si)
     except vim.fault.InvalidLogin:
-        tk.MessageBox.showinfo("title", "Unable to connect to host"
-                                        "with supplied credentials.")
+        messagebox.showinfo("title", "Unable to connect to host"
+                                     " with supplied credentials.")
         return
         # raise SystemExit("Unable to connect to host "
         #                 "with supplied credentials.")
     except socket.error:
-        tk.MessageBox.showinfo("title", "Unable to connect to host")
+        messagebox.showinfo("title", "Unable to connect to host")
         return
         # raise SystemExit("Unable to connect to host.")
     except Exception as e:
-        tk.MessageBox.showinfo("title", e)
+        messagebox.showinfo("title", e)
         return
 
     # render clone_vm window
     vc_main_gui.render_main_gui(window)
-
-    # content = window.si.RetrieveContent()
-    # for child in content.rootFolder.childEntity:
-    #     if hasattr(child, 'vmFolder'):
-    #         datacenter = child
-    #         vmfolder = datacenter.vmFolder
-    #         vmlist = vmfolder.childEntity
-    #         for vm in vmlist:
-    #             printvminfo(vm)
 
 
 def render_login(window):
