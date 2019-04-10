@@ -1,46 +1,8 @@
 """"Provides the central GUI"""
 import tkinter as tk
 from core_functions.list_vms import list_vms
-
-
-# https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
-class ScrollFrame(tk.Frame):
-    def __init__(self, parent, size):
-        super().__init__(parent)
-        self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff",
-                                width=size)
-        self.viewPort = tk.Frame(self.canvas, background="#ffffff")
-        self.vsb = tk.Scrollbar(self, orient="vertical",
-                                command=self.canvas.yview)
-        self.canvas.configure(yscrollcommand=self.vsb.set)
-
-        self.vsb.pack(side="right", fill="y")
-        self.canvas.pack(side="left", fill="both", expand=True)
-        self.canvas.create_window((4, 4), window=self.viewPort, anchor="nw",
-                                  tags="self.viewPort")
-
-        self.viewPort.bind("<Configure>", self.onFrameConfigure)
-
-    def onFrameConfigure(self, event):
-        '''Reset the scroll region to encompass the inner frame'''
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-
-class scrollable_frame(tk.Frame):
-    def __init__(self, root, window):
-        tk.Frame.__init__(self, root)
-        self.scrollFrame = ScrollFrame(self, root.winfo_width())
-        # make menu buttons, should be a dict of functions I beleive
-        tk.Button(self.scrollFrame.viewPort,
-                  text="List VM's", width=21,
-                  command=lambda: list_vms(window)).pack(side="top")
-        tk.Button(self.scrollFrame.viewPort,
-                  text="Clone VM", width=21).pack(side="top")
-
-        self.scrollFrame.pack(side="top", fill="both", expand=tk.YES)
-
-    def printMsg(self, msg):
-        print(msg)
+from core_functions.clone_vm import render_clone_vm
+from GUI.scrollable_frame import scrollable_frame
 
 
 def render_main_gui(window):
@@ -70,9 +32,15 @@ def render_main_gui(window):
     window.central_frame.pack(expand=tk.YES,
                               fill=tk.BOTH, side=tk.LEFT)
 
-    # Problem stuff
     window.update_idletasks()
     window.menu_frame = scrollable_frame(window.menu_parent_frame, window)
     window.menu_frame.pack(expand=tk.NO, fill=tk.BOTH, side=tk.LEFT)
+    # make menu buttons, should be a dict of functions I beleive
+    tk.Button(window.menu_frame.scrollFrame.viewPort,
+              text="List VM's", width=21,
+              command=lambda: list_vms(window)).pack(side="top")
+    tk.Button(window.menu_frame.scrollFrame.viewPort,
+              text="Clone VM", width=21,
+              command=lambda: render_clone_vm(window)).pack(side="top")
 
 # add menu buttons
