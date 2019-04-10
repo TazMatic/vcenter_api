@@ -34,16 +34,11 @@ class scrollable_frame(tk.Frame):
 
         tk.Frame.__init__(self, root)
         self.scrollFrame = ScrollFrame(self, root.winfo_width())
-        for row in range(100):
-            a = row
-            tk.Label(self.scrollFrame.viewPort, text="%s" % row,
-                     width=3, borderwidth="1",
-                     relief="solid").grid(row=row, column=0)
-            t = "this is the second column for row %s" % row
-            tk.Button(self.scrollFrame.viewPort, text=t,
-                      command=lambda x=a:
-                      self.printMsg("Hello " +
-                                    str(x))).grid(row=row, column=1)
+        # make menu buttons, should be a dict of functions I beleive
+        tk.Button(self.scrollFrame.viewPort,
+                  text="List VM's", width=21).pack(side="top")
+        tk.Button(self.scrollFrame.viewPort,
+                  text="Clone VM", width=21).pack(side="top")
 
         self.scrollFrame.pack(side="top", fill="both", expand=tk.YES)
 
