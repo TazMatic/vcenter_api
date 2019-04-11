@@ -7,12 +7,10 @@ import atexit
 import GUI.vc_main_gui as vc_main_gui
 from pyVmomi import vim
 from functools import partial
-# https://stackoverflow.com/a/4552646
-
-
 lastRendered = None
 
 
+# https://stackoverflow.com/a/4552646
 def rClicker(e):
     ''' right click context menu for all Tk Entry and Text widgets
     '''

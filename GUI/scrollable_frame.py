@@ -14,10 +14,16 @@ class ScrollFrame(tk.Frame):
 
         self.vsb.pack(side="right", fill="y")
         self.canvas.pack(side="left", fill="both", expand=True)
-        self.canvas.create_window((4, 4), window=self.viewPort, anchor="nw",
-                                  tags="self.viewPort")
+        self.canvas_frame = self.canvas.create_window((
+            4, 4), window=self.viewPort, anchor="nw", tags="self.viewPort")
 
+        # Make the window resize
         self.viewPort.bind("<Configure>", self.onFrameConfigure)
+        self.canvas.bind('<Configure>', self.FrameWidth)
+
+    def FrameWidth(self, event):
+        canvas_width = event.width
+        self.canvas.itemconfig(self.canvas_frame, width=canvas_width)
 
     def onFrameConfigure(self, event):
         '''Reset the scroll region to encompass the inner frame'''

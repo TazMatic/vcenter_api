@@ -17,4 +17,6 @@ class main_window(tkinter.Tk):
 
         self.host_text = None
 
-        GUI.vc_connect.render_login(self)
+        # GUI.vc_connect.render_login(self)
+        from GUI.vc_main_gui import render_main_gui
+        render_main_gui(self)
