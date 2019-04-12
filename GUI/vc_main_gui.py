@@ -42,5 +42,3 @@ def render_main_gui(window):
     tk.Button(window.menu_frame.scrollFrame.viewPort,
               text="Clone VM", width=21,
               command=lambda: render_clone_vm(window)).pack(side="top")
-
-# add menu buttons

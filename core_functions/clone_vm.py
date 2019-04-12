@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from pyVmomi import vim
 from GUI.scrollable_frame import scrollable_frame
-from core_functions.add_nic_to_vm import add_nic
+# from core_functions.add_nic_to_vm import add_nic
 
 
 def wait_for_task(task):
@@ -107,25 +107,29 @@ def _clone_vm(
 
 
 def clone_vm(window):
-    """
-    Let this thing fly
-    """
-    # connect this thing
-
     content = window.si.RetrieveContent()
-    template = None
+    template = window.template_entry.get()
 
-    template = get_obj(content, [vim.VirtualMachine], args.template)
+    template = get_obj(content, [vim.VirtualMachine], template)
 
     if template:
         _clone_vm(
-            content, template, args.vm_name, window.si,
-            args.datacenter_name, args.vm_folder,
-            args.datastore_name, args.cluster_name,
-            args.resource_pool, args.power_on, args.datastorecluster_name)
-        if args.opaque_network:
-            vm = get_obj(content, [vim.VirtualMachine], args.vm_name)
-            add_nic(si, vm, args.opaque_network)
+            content, template, window.vm_name_entry.get(), window.si,
+            window.datacenter_name_entry.get(), window.folder_entry.get(),
+            # args.datastore_name,
+            None,
+            # args.cluster_name,
+            None,
+            # args.resource_pool,
+            None,
+            # args.power_on,
+            None,
+            # args.datastorecluster_name
+            None
+            )
+        # if window.opaque_network_entry.get():
+        #     vm = get_obj(content, [vim.VirtualMachine], args.vm_name)
+        #     add_nic(window.si, vm, args.opaque_network)
     else:
         messagebox.showinfo("Error", "Please enter in a valid template")
 
@@ -221,7 +225,7 @@ def render_clone_vm(window):
     # frame5_label = tk.Label(frame5_1, text="Enter VM folder:",
     #                         font=("Helvetica", 14), anchor="e", width=20)
     # frame5_label.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
-    window.folder_entry = tk.Button(frame5_2, font=("Helvetica", 14),
-                                    text="Clone VM",
-                                    command=lambda: clone_vm(window))
-    window.folder_entry.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+    tk.Button(frame5_2, font=("Helvetica", 14),
+              text="Clone VM",
+              command=lambda: clone_vm(window)).pack(
+              side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
