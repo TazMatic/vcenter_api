@@ -16,5 +16,10 @@ class main_window(tkinter.Tk):
                              fill=tkinter.BOTH, side=tkinter.LEFT)
 
         self.host_text = None
+        self.log = None
+        self.scroll_frame = None
+        self.last_rendered = None
 
         GUI.vc_connect.render_login(self)
+        # from GUI.vc_main_gui import render_main_gui
+        # render_main_gui(self)
