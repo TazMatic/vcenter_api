@@ -1,16 +1,5 @@
 import tkinter as tk
-from idlelib.WidgetRedirector import WidgetRedirector
-
-
-# https://stackoverflow.com/a/11612656
-class ReadOnlyText(tk.Text):
-    def __init__(self, *args, **kwargs):
-        tk.Text.__init__(self, *args, **kwargs)
-        self.redirector = WidgetRedirector(self)
-        self.insert = self.redirector.register("insert",
-                                               lambda *args, **kw: "break")
-        self.delete = self.redirector.register("delete",
-                                               lambda *args, **kw: "break")
+import GUI.readOnlyLog
 
 
 def printvminfo(log, vm, depth=1):
@@ -62,8 +51,9 @@ def list_vms(window):
         # create the log to print to
         if(window.last_rendered):
             window.last_rendered.pack_forget()
-        window.log = ReadOnlyText(window.central_frame, bg="#3a3d42",
-                                  fg="#ffffff", font=("Helvetica", 12))
+        window.log = GUI.ReadOnlyLog.ReadOnlyText(window.central_frame,
+                                                  bg="#3a3d42", fg="#ffffff",
+                                                  font=("Helvetica", 12))
         window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)
         window.last_rendered = window.log
         _list_vms(window)

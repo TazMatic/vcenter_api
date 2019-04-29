@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from pyVmomi import vim
+from GUI.readOnlyLog import ReadOnlyText
 import time
 from GUI.scrollable_frame import scrollable_frame
 # from core_functions.add_nic_to_vm import add_nic
@@ -235,9 +236,6 @@ def render_clone_vm(window):
         window.folder_entry = tk.Entry(frame4_2, font=("Helvetica", 14))
         window.folder_entry.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
         # optional datastore
-        # optional cluster name
-        # optional resourcePool
-        # power on tick box and send it button
         frame5 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
                           height=80, bg="#f442e8")
         frame5.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
@@ -247,11 +245,64 @@ def render_clone_vm(window):
         frame5_2 = tk.Frame(frame5, width=200,
                             height=80, bg="#000000")
         frame5_2.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
-        # TODO add power on tick box
-        # frame5_label = tk.Label(frame5_1, text="Enter VM folder:",
-        #                         font=("Helvetica", 14), anchor="e", width=20)
-        # frame5_label.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
-        tk.Button(frame5_2, font=("Helvetica", 14),
+        frame5_label = tk.Label(frame5_1, text="Enter datastore name:",
+                                font=("Helvetica", 14), anchor="e", width=20)
+        # add a resize event that increases font size
+        frame5_label.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        window.datastore_entry = tk.Entry(frame5_2, font=("Helvetica", 14))
+        window.datastore_entry.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        # optional cluster name
+        frame6 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
+                          height=80, bg="#f442e8")
+        frame6.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
+        frame6_1 = tk.Frame(frame6, width=200,
+                            height=80, bg="#ffffff")
+        frame6_1.pack(side=tk.LEFT, expand=tk.NO, fill=tk.Y)
+        frame6_2 = tk.Frame(frame6, width=200,
+                            height=80, bg="#000000")
+        frame6_2.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        frame6_label = tk.Label(frame6_1, text="Enter cluster name:",
+                                font=("Helvetica", 14), anchor="e", width=20)
+        # add a resize event that increases font size
+        frame6_label.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        window.datastore_entry = tk.Entry(frame6_2, font=("Helvetica", 14))
+        window.datastore_entry.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        # optional resourcePool
+        frame7 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
+                          height=80, bg="#f442e8")
+        frame7.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
+        frame7_1 = tk.Frame(frame7, width=200,
+                            height=80, bg="#ffffff")
+        frame7_1.pack(side=tk.LEFT, expand=tk.NO, fill=tk.Y)
+        frame7_2 = tk.Frame(frame7, width=200,
+                            height=80, bg="#000000")
+        frame7_2.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        frame7_label = tk.Label(frame7_1, text="Enter cluster name:",
+                                font=("Helvetica", 14), anchor="e", width=20)
+        # add a resize event that increases font size
+        frame7_label.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        window.datastore_entry = tk.Entry(frame7_2, font=("Helvetica", 14))
+        window.datastore_entry.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        # power on tick box and send it button
+        frame8 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
+                          height=80, bg="#f442e8")
+        frame8.pack(side=tk.TOP, fill=tk.BOTH, expand=tk.YES)
+        frame8_1 = tk.Frame(frame8, width=200,
+                            height=80, bg="#ffffff")
+        frame8_1.pack(side=tk.LEFT, expand=tk.NO, fill=tk.Y)
+        frame8_2 = tk.Frame(frame8, width=200,
+                            height=80, bg="#000000")
+        frame8_2.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        # power on tick box
+        window.power_on = tk.Checkbutton(frame8_1, font=("Helvetica", 14),
+                                         text="Power on VM")
+        window.power_on.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        tk.Button(frame8_2, font=("Helvetica", 14),
                   text="Clone VM",
                   command=lambda: clone_vm(window)).pack(
                   side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+        # Log
+        window.log = ReadOnlyText(window.scroll_frame.scrollFrame.viewPort,
+                                  bg="#3a3d42", fg="#ffffff",
+                                  font=("Helvetica", 12))
+        window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)
