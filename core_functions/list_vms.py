@@ -39,11 +39,12 @@ def list_vms(window):
     # clear the screen of anything in it before
     if(window.log):
         if(window.last_rendered == window.log):
+            print("made it here")
             window.log.delete(1.0, tk.END)
             _list_vms(window)
         else:
-            window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)
             window.last_rendered.pack_forget()
+            window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.LEFT)
             window.last_rendered = window.log
             window.log.delete(1.0, tk.END)
             _list_vms(window)
@@ -51,7 +52,7 @@ def list_vms(window):
         # create the log to print to
         if(window.last_rendered):
             window.last_rendered.pack_forget()
-        window.log = GUI.ReadOnlyLog.ReadOnlyText(window.central_frame,
+        window.log = GUI.readOnlyLog.ReadOnlyText(window.central_frame,
                                                   bg="#3a3d42", fg="#ffffff",
                                                   font=("Helvetica", 12))
         window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)

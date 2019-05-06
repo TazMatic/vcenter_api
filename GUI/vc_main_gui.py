@@ -22,7 +22,7 @@ def render_main_gui(window):
     window.maxsize(99999, 99999)
     window.main_frame.config(bg='#3a3d42')
 
-# add two frames, one for the verticle menu and one for the selected options
+# add two frames, one for the vertical menu and one for the selected options
     window.menu_parent_frame = tk.Frame(window.main_frame, width=200,
                                         bg="#175ed1")
     window.central_frame = tk.Frame(window.main_frame, width=600,
@@ -33,9 +33,10 @@ def render_main_gui(window):
                               fill=tk.BOTH, side=tk.LEFT)
 
     window.update_idletasks()
-    window.menu_frame = scrollable_frame(window.menu_parent_frame, window)
+    window.menu_parent_frame.update_idletasks()
+    window.menu_frame = scrollable_frame(window.menu_parent_frame, window.menu_parent_frame)
     window.menu_frame.pack(expand=tk.NO, fill=tk.BOTH, side=tk.LEFT)
-    # make menu buttons, should be a dict of functions I beleive
+    # make menu buttons, should be a dict of functions I believe
     tk.Button(window.menu_frame.scrollFrame.viewPort,
               text="List VM's", width=21,
               command=lambda: list_vms(window)).pack(side="top")

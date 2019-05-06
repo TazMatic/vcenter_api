@@ -14,15 +14,22 @@ def wait_for_task(task, window):
     while not task_done:
         if task.info.state == 'success':
             m, s = divmod(time.time()-start_time, 60)
-            print('Done Cloning ({}.{} minutes)'.format(int(m), int(s)))
+            # print('Done Cloning ({}.{} minutes)'.format(int(m), int(s)))
+            string = 'Done Cloning ({}.{} minutes)'.format(int(m), int(s))
+            window.scroll_frame.scrollFrame.log.insert(tk.END, string)
+            window.scroll_frame.scrollFrame.log.insert(tk.END, "\n")
             return task.info.result
 
         if task.info.state == 'error':
-            print("there was an error")
+            # print("there was an error")
+            window.scroll_frame.scrollFrame.log.insert(tk.END, "there was an error")
+            window.scroll_frame.scrollFrame.log.insert(tk.END, "\n")
             task_done = True
 
         if (time.time() - start_time) % 30 <= 1:
-            print("cloning...")
+            # print("cloning...")
+            window.scroll_frame.scrollFrame.log.insert(tk.END, "cloning...")
+            window.scroll_frame.scrollFrame.log.insert(tk.END, "\n")
             time.sleep(1)
 
 
@@ -110,10 +117,15 @@ def _clone_vm(
     clonespec.location = relospec
     clonespec.powerOn = power_on
 
-    print("cloning VM...")
+    # print("cloning VM...")
+    window.scroll_frame.scrollFrame.log.insert(tk.END, "cloning VM...")
+    window.scroll_frame.scrollFrame.log.insert(tk.END, "\n")
     task = template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
     wait_for_task(task, window)
-    print("Clone successful")
+    # print("Clone successful")
+    string = vm_name + "created successfully"
+    window.scroll_frame.scrollFrame.log.insert(tk.END, string)
+    window.scroll_frame.scrollFrame.log.insert(tk.END, "\n")
 
 
 def clone_vm(window):
@@ -151,8 +163,8 @@ def render_clone_vm(window):
         if(window.last_rendered == window.scroll_frame):
             pass
         else:
-            window.scroll_frame.pack(expand=tk.YES, fill=tk.BOTH, side=tk.LEFT)
             window.last_rendered.pack_forget()
+            window.scroll_frame.pack(expand=tk.YES, fill=tk.BOTH, side=tk.LEFT)
             window.last_rendered = window.scroll_frame
     else:
         # render scrollable frame
@@ -302,7 +314,7 @@ def render_clone_vm(window):
                   command=lambda: clone_vm(window)).pack(
                   side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
         # Log
-        window.log = ReadOnlyText(window.scroll_frame.scrollFrame.viewPort,
+        window.scroll_frame.scrollFrame.log = ReadOnlyText(window.scroll_frame.scrollFrame.viewPort,
                                   bg="#3a3d42", fg="#ffffff",
                                   font=("Helvetica", 12))
-        window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)
+        window.scroll_frame.scrollFrame.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)

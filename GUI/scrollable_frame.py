@@ -31,7 +31,7 @@ class ScrollFrame(tk.Frame):
 
 
 class scrollable_frame(tk.Frame):
-    def __init__(self, root, window):
+    def __init__(self, root, parent):
         tk.Frame.__init__(self, root)
-        self.scrollFrame = ScrollFrame(self, root.winfo_width())
+        self.scrollFrame = ScrollFrame(self, parent.winfo_reqwidth())
         self.scrollFrame.pack(side="top", fill="both", expand=tk.YES)

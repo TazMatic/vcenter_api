@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import socket
-from pyVim.connect import SmartConnectNoSSL, Disconnect
+from pyvim.connect import SmartConnectNoSSL, Disconnect
 import atexit
 import GUI.vc_main_gui as vc_main_gui
 from pyVmomi import vim
@@ -129,7 +129,7 @@ def render_login(window):
              text="Password", height=1,  width=15, bg='#3a3d42',
              foreground="#ffffff", font=("Helvetica", 14)).place(x=60, y=150)
 
-    window.password_text = tk.Entry(window.main_frame, font=("Helvetica", 14),
+    window.password_text = tk.Entry(window.main_frame, show="*", font=("Helvetica", 14),
                                     width=30)
     window.password_text.place(x=200, y=150)
 
