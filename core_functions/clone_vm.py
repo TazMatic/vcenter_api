@@ -10,26 +10,27 @@ from GUI.scrollable_frame import scrollable_frame
 def wait_for_task(task, window):
     """ wait for a vCenter task to finish """
     task_done = False
+    log = window.scroll_frame.scrollFrame.log
     start_time = time.time()
     while not task_done:
         if task.info.state == 'success':
             m, s = divmod(time.time()-start_time, 60)
             # print('Done Cloning ({}.{} minutes)'.format(int(m), int(s)))
             string = 'Done Cloning ({}.{} minutes)'.format(int(m), int(s))
-            window.log.insert(tk.END, string)
-            window.log.insert(tk.END, "\n")
+            log.insert(tk.END, string)
+            log.insert(tk.END, "\n")
             return task.info.result
 
         if task.info.state == 'error':
             # print("there was an error")
-            window.log.insert(tk.END, "there was an error")
-            window.log.insert(tk.END, "\n")
+            log.insert(tk.END, "there was an error")
+            log.insert(tk.END, "\n")
             task_done = True
 
         if (time.time() - start_time) % 30 <= 1:
             # print("cloning...")
-            window.log.insert(tk.END, "cloning...")
-            window.log.insert(tk.END, "\n")
+            log.insert(tk.END, "cloning...")
+            log.insert(tk.END, "\n")
             time.sleep(1)
 
 
@@ -118,14 +119,15 @@ def _clone_vm(
     clonespec.powerOn = power_on
 
     # print("cloning VM...")
-    window.log.insert(tk.END, "cloning VM...")
-    window.log.insert(tk.END, "\n")
+    log = window.scroll_frame.scrollFrame.log
+    log.insert(tk.END, "cloning VM...")
+    log.insert(tk.END, "\n")
     task = template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
     wait_for_task(task, window)
     # print("Clone successful")
     string = vm_name + "created successfully"
-    window.log.insert(tk.END, string)
-    window.log.insert(tk.END, "\n")
+    log.insert(tk.END, string)
+    log.insert(tk.END, "\n")
 
 
 def clone_vm(window):
@@ -314,7 +316,9 @@ def render_clone_vm(window):
                   command=lambda: clone_vm(window)).pack(
                   side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
         # Log
-        window.log = ReadOnlyText(window.scroll_frame.scrollFrame.viewPort,
-                                  bg="#3a3d42", fg="#ffffff",
-                                  font=("Helvetica", 12))
-        window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)
+        log = window.scroll_frame.scrollFrame.log
+        log = ReadOnlyText(window.scroll_frame.scrollFrame.viewPort,
+                           bg="#3a3d42", fg="#ffffff",
+                           font=("Helvetica", 12))
+
+        log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)

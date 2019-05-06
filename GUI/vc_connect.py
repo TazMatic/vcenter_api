@@ -130,7 +130,7 @@ def render_login(window):
              foreground="#ffffff", font=("Helvetica", 14)).place(x=60, y=150)
 
     window.password_text = tk.Entry(window.main_frame, font=("Helvetica", 14),
-                                    width=30)
+                                    width=30, show="*")
     window.password_text.place(x=200, y=150)
 
     # create login and cancel button
