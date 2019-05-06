@@ -14,15 +14,22 @@ def wait_for_task(task, window):
     while not task_done:
         if task.info.state == 'success':
             m, s = divmod(time.time()-start_time, 60)
-            print('Done Cloning ({}.{} minutes)'.format(int(m), int(s)))
+            # print('Done Cloning ({}.{} minutes)'.format(int(m), int(s)))
+            string = 'Done Cloning ({}.{} minutes)'.format(int(m), int(s))
+            window.log.insert(tk.END, string)
+            window.log.insert(tk.END, "\n")
             return task.info.result
 
         if task.info.state == 'error':
-            print("there was an error")
+            # print("there was an error")
+            window.log.insert(tk.END, "there was an error")
+            window.log.insert(tk.END, "\n")
             task_done = True
 
         if (time.time() - start_time) % 30 <= 1:
-            print("cloning...")
+            # print("cloning...")
+            window.log.insert(tk.END, "cloning...")
+            window.log.insert(tk.END, "\n")
             time.sleep(1)
 
 
@@ -110,10 +117,15 @@ def _clone_vm(
     clonespec.location = relospec
     clonespec.powerOn = power_on
 
-    print("cloning VM...")
+    # print("cloning VM...")
+    window.log.insert(tk.END, "cloning VM...")
+    window.log.insert(tk.END, "\n")
     task = template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
     wait_for_task(task, window)
-    print("Clone successful")
+    # print("Clone successful")
+    string = vm_name + "created successfully"
+    window.log.insert(tk.END, string)
+    window.log.insert(tk.END, "\n")
 
 
 def clone_vm(window):

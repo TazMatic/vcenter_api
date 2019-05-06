@@ -51,7 +51,7 @@ def list_vms(window):
         # create the log to print to
         if(window.last_rendered):
             window.last_rendered.pack_forget()
-        window.log = GUI.ReadOnlyLog.ReadOnlyText(window.central_frame,
+        window.log = GUI.readOnlyLog.ReadOnlyText(window.central_frame,
                                                   bg="#3a3d42", fg="#ffffff",
                                                   font=("Helvetica", 12))
         window.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)
