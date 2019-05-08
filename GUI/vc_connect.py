@@ -133,10 +133,16 @@ def render_login(window):
                                     width=30, show="*")
     window.password_text.place(x=200, y=150)
 
+    # Bind enter to login
+    def return_press(event):
+        vc_connect(window)
+
+    window.bind('<Return>', return_press)
+
     # create login and cancel button
     tk.Button(window.main_frame, text="Login", width=15,
               command=partial(vc_connect, window),
-              font=("Helvetica", 14)).place(x=150, y=200)
+              font=("Helvetica", 14)).place(x=130, y=200)
     tk.Button(window.main_frame, text="Cancel", width=15,
               command=window.destroy,
-              font=("Helvetica", 14)).place(x=300, y=200)
+              font=("Helvetica", 14)).place(x=320, y=200)
