@@ -191,7 +191,7 @@ def render_clone_vm(window):
         # add a resize event that increases font size
         frame1_label.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
         # TODO switch entry to drop down menu
-        # window.template_entry = tk.Entry(frame1_2, font=("Helvetica", 14))
+        window.template_entry = tk.Entry(frame1_2, font=("Helvetica", 14))
         window.template_entry.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
         # render new VM name
         frame2 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
@@ -317,6 +317,7 @@ def render_clone_vm(window):
                   command=lambda: clone_vm(window)).pack(
                   side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
         # Log
+        window.scroll_frame.scrollFrame.log = None
         log = window.scroll_frame.scrollFrame.log
         log = ReadOnlyText(window.scroll_frame.scrollFrame.viewPort,
                            bg="#3a3d42", fg="#ffffff",
