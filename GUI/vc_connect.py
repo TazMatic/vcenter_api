@@ -66,8 +66,8 @@ def rClickbinder(r):
 def vc_connect(window):
     window.si = None
     try:
-        window.si = SmartConnectNoSSL(host=window.host_text.get(),
-                                      user=window.username_text.get(),
+        window.si = SmartConnectNoSSL(host=window.host_text.get().strip(),
+                                      user=window.username_text.get().strip(),
                                       pwd=window.password_text.get())
         atexit.register(Disconnect, window.si)
     except vim.fault.InvalidLogin:
