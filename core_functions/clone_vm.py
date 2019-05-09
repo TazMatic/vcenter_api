@@ -197,8 +197,9 @@ def render_clone_vm(window):
         if(window.last_rendered):
             window.last_rendered.pack_forget()
         window.last_rendered = window.scroll_frame
-        _get_vms(window)
-        print(window.vms)
+        # TODO add option menu to select template
+		# _get_vms(window)
+        # print(window.vms)
         # render template
         frame1 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
                           height=80, bg="#f442e8")
