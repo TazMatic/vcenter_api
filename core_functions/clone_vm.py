@@ -52,6 +52,28 @@ def get_obj(content, vimtype, name):
 
     return obj
 
+def _append_vms(vm, window, depth=1):
+    if hasattr(vm, 'childEntity'):
+        if depth > 10:
+            return
+        vmlist = vm.childEntity
+        for child in vmlist:
+            _append_vms(child, window, depth+1)
+        return
+
+    summary = vm.summary
+    window.vms.append(summary.config.name)
+
+def _get_vms(window):
+    content = window.si.RetrieveContent()
+    window.vms.clear()
+    for child in content.rootFolder.childEntity:
+        if hasattr(child, 'vmFolder'):
+            datacenter = child
+            vmfolder = datacenter.vmFolder
+            vmlist = vmfolder.childEntity
+            for vm in vmlist:
+                _append_vms(vm, window)
 
 def _clone_vm(
         content, template, vm_name, si,
@@ -161,11 +183,12 @@ def render_clone_vm(window):
     # if window.clone_frame, bring it to the front
     if(window.scroll_frame):
         if(window.last_rendered == window.scroll_frame):
-            pass
+            _get_vms(window)
         else:
             window.last_rendered.pack_forget()
             window.scroll_frame.pack(expand=tk.YES, fill=tk.BOTH, side=tk.LEFT)
             window.last_rendered = window.scroll_frame
+            _get_vms(window)
     else:
         # render scrollable frame
         window.update_idletasks()
@@ -174,6 +197,8 @@ def render_clone_vm(window):
         if(window.last_rendered):
             window.last_rendered.pack_forget()
         window.last_rendered = window.scroll_frame
+        _get_vms(window)
+        print(window.vms)
         # render template
         frame1 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
                           height=80, bg="#f442e8")
@@ -188,6 +213,7 @@ def render_clone_vm(window):
                                 font=("Helvetica", 14), anchor="e", width=20)
         # add a resize event that increases font size
         frame1_label.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
+		# TODO MAKE A DROP DOWN MENU
         window.template_entry = tk.Entry(frame1_2, font=("Helvetica", 14))
         window.template_entry.pack(side=tk.LEFT, expand=tk.YES, fill=tk.BOTH)
         # render new VM name

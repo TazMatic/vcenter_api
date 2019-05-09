@@ -19,6 +19,7 @@ class main_window(tkinter.Tk):
         self.log = None
         self.scroll_frame = None
         self.last_rendered = None
+        self.vms = list()
 
         GUI.vc_connect.render_login(self)
         # from GUI.vc_main_gui import render_main_gui

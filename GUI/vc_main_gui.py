@@ -10,6 +10,9 @@ def render_main_gui(window):
     for child in window.main_frame.winfo_children():
         child.destroy()
 
+    # Clear binds
+    window.unbind('<Return>')
+
     # Centering the window
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
