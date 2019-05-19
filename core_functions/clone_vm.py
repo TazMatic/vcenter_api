@@ -145,7 +145,7 @@ def _clone_vm(
     task = template.Clone(folder=destfolder, name=vm_name, spec=clonespec)
     wait_for_task(task, window)
     # print("Clone successful")
-    string = vm_name + "created successfully"
+    string = vm_name + " created successfully"
     window.scroll_frame.scrollFrame.log.insert(tk.END, string)
     window.scroll_frame.scrollFrame.log.insert(tk.END, "\n")
 
@@ -197,9 +197,7 @@ def render_clone_vm(window):
         if(window.last_rendered):
             window.last_rendered.pack_forget()
         window.last_rendered = window.scroll_frame
-        # TODO add option menu to select template
-		# _get_vms(window)
-        # print(window.vms)
+
         # render template
         frame1 = tk.Frame(window.scroll_frame.scrollFrame.viewPort, width=565,
                           height=80, bg="#f442e8")
@@ -345,3 +343,7 @@ def render_clone_vm(window):
                                   bg="#3a3d42", fg="#ffffff",
                                   font=("Helvetica", 12))
         window.scroll_frame.scrollFrame.log.pack(expand=tk.YES, fill=tk.BOTH, side=tk.TOP)
+		
+		# TODO add option menu to select template
+		# _get_vms(window)
+        # print(window.vms)
